@@ -26,11 +26,11 @@ Notification must be sent when a new report is available.
 
 List the dependencies of the Analysis-functionality.
 
-1. Access to the Server containing the telemetrics in a csv file
-1. _enter dependency
-1. _enter dependency
+1. Access to the Server containing the telemetrics in a csv file.
+2. Mail server access for Notification.
+3. PDF report generator.
+4. Access to write/store the PDF report in server.
 
-(add more if needed)
 
 ### Mark the System Boundary
 
@@ -40,10 +40,11 @@ What is included in the software unit-test? What is not? Fill this table.
 |---------------------------|---------------|---
 Battery Data-accuracy       | No            | We do not test the accuracy of data
 Computation of maximum      | Yes           | This is part of the software being developed
-Off-the-shelf PDF converter | _enter Yes/No | _enter reasoning
-Counting the breaches       | _enter Yes/No | _enter reasoning
-Detecting trends            | _enter Yes/No | _enter reasoning
-Notification utility        | _enter Yes/No | _enter reasoning
+Computation of minimum      | Yes           | This is part of the software being developed
+Off-the-shelf PDF converter | No 			| We do not test the PDF converter
+Counting the breaches       | Yes	 		| This is part of the software being developed
+Detecting trends            | Yes			| This is part of the software being developed
+Notification utility        | No			| We do not test the End mail notification
 
 ### List the Test Cases
 
@@ -51,12 +52,26 @@ Write tests in the form of `<expected output or action>` from `<input>` / when `
 
 Add to these tests:
 
-1. Write minimum and maximum to the PDF from a csv containing positive and negative readings
-1. Write "Invalid input" to the PDF when the csv doesn't contain expected data
-1. _enter a test
-1. _enter a test
+Positive Flow Test Cases:
 
-(add more)
+1. Write minimum and maximum to the PDF from a csv containing positive and negative readings.
+2. Write "Invalid input" to the PDF when the csv doesn't contain expected data.
+3. Write "Breach counts" to the PDF when the input cross the threshold.
+4. check whether Breach not counted when the input < threshold(Ensure threshold Boundary).
+5. check whether Breach is counted when the input > threshold(Ensure threshold Boundary).
+6. Write "Trends" to the PDF when the reading was continuously increasing for 30 minutes
+7. Check the PDF report of the analysis is storing in every week.
+8. Check whether Notification is sent when a new report is available.
+10. Check Notification message contents are proper/correct.
+
+Negative Flow Test Cases:
+
+1. Write "valid input" to the PDF when the csv contain expected data.
+2. check whether Breach not counted when the input < threshold(Ensure threshold Boundary).
+3. Don't Write "Trends" to the PDF when the reading was continuously increasing for below 30 minutes.
+4. Check the PDF report of the analysis is generating/storing on other daysPDF report count per week == 1).
+5. Check whether Notification is not sent when a new report is not available.
+
 
 ### Recognize Fakes and Reality
 
@@ -68,8 +83,8 @@ Enter one part that's real and another part that's faked/mocked.
 |--------------------------|--------------|-----------------------------|---
 Read input from server     | csv file     | internal data-structure     | Fake the server store
 Validate input             | csv data     | valid / invalid             | None - it's a pure function
-Notify report availability | _enter input | _enter output               | _enter fake or mock
-Report inaccessible server | _enter input | _enter output               | _enter fake or mock
-Find minimum and maximum   | _enter input | _enter output               | _enter fake or mock
-Detect trend               | _enter input | _enter output               | _enter fake or mock
-Write to PDF               | _enter input | _enter output               | _enter fake or mock
+Notify report availability | PDF Generated| Connect mail server         | Mock the Notification function
+Report inaccessible server | PDF file 	  | Report storage server       | Fake the server store
+Find minimum and maximum   | csv data	  | Min and Max stored entires  | None - it's a pure function
+Detect trend               | csv data	  | Trend               		| None - it's a pure function
+Write to PDF               | internal data-structure| PDF file			| Mock the PDF converter function
